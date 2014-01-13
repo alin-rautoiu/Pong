@@ -15,7 +15,6 @@ namespace Pong
         double y;
         double speed = 1;
         public List<Cell> cells = new List<Cell>();
-        int iter = 1;
         public Form1()
         {
             
@@ -39,7 +38,7 @@ namespace Pong
 
             Timer tick = new Timer();
             tick.Tick += new EventHandler(logic);
-            tick.Interval = 500;
+            tick.Interval = 250;
             tick.Start();
             tick.Enabled = true;            
         }
@@ -65,7 +64,7 @@ namespace Pong
             {
                 if (true)
                 {
-                    graphicsObj.DrawRectangle(myPen, new Rectangle(cell.X, cell.Y, cell.Size, cell.Size));
+                    graphicsObj.DrawRectangle(myPen, new Rectangle(cell.X / 5, cell.Y / 5, cell.Size / 10, cell.Size / 10));
                     cell.Drew = true;
                 }
             }
