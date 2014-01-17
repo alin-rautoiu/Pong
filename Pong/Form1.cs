@@ -29,25 +29,12 @@ namespace Pong
             InitializeComponent();
             Paused = true;
             panel1.Paint += Form1_Paint;
-            button1.Click += button1_Click;
-
             panel1.Click += panel1_Click;
+            button1.Click += button1_Click;
+            button2.Click += button2_Click;
+            button3.Click += button3_Click;
 
-            //Toad
-            /*cells.Add(new Cell(40,80));
-            cells.Add(new Cell(40,40));
-            cells.Add(new Cell(40, 120));
-
-            cells.Add(new Cell(80, 80));
-            cells.Add(new Cell(80, 120));
-            cells.Add(new Cell(80, 160));*/
-
-            //Glider
-            cells.Add(new Cell(80, 80));
-            cells.Add(new Cell(100, 80));
-            cells.Add(new Cell(120, 80));
-            cells.Add(new Cell(120, 60));
-            cells.Add(new Cell(100, 40));
+            populate();
 
             foreach (var cell in cells)
             {
@@ -59,6 +46,81 @@ namespace Pong
             tick.Tick += new EventHandler(logic);
             tick.Interval = 250;    
             tick.Stop();
+        }
+
+        void button3_Click(object sender, EventArgs e)
+        {
+            cells.Clear();
+            panel1.Refresh();
+        }
+
+        void button2_Click(object sender, EventArgs e)
+        {
+            KeyValuePair<Automata, String> auto = (KeyValuePair<Automata, String>)listBox1.SelectedItem;
+
+            int x;
+            int y;
+            Int32.TryParse(textBox1.Text, out x);
+            Int32.TryParse(textBox2.Text, out y);
+
+            foreach (var cell in auto.Key)
+            {
+                Cell newCell = new Cell(cell.X + x - x % Cell.Size,
+                    cell.Y + y - y % Cell.Size);
+                cells.Add(newCell);
+            }
+            panel1.Refresh();
+
+        }
+
+        public void populate()
+        {
+            Automata blinker = new Automata();
+            blinker.Name = "Blinker";
+            blinker.AddRange(new List<Cell>()
+            {
+                new Cell(20, 40),
+                new Cell(20, 20),
+                new Cell(20, 60)
+            });
+
+            Automata glider = new Automata();
+            glider.Name = "Crawler";
+            glider.AddRange(new List<Cell>()
+            {
+                new Cell(80, 80),
+                new Cell(100, 80),
+                new Cell(120, 80),
+                new Cell(120, 60),
+                new Cell(100, 40)
+            });
+
+            Automata beacon = new Automata();
+            beacon.Name = "Beacon";
+            beacon.AddRange(new List<Cell>()
+            {
+                new Cell(20,20),
+                new Cell(20,40),
+                new Cell(40,20),
+                new Cell(80,60),
+                new Cell(60,80),
+                new Cell(80,80)
+            });
+
+            Automata block = new Automata();
+            block.Name = "Block";
+            block.AddRange(new List<Cell>()
+            {
+                new Cell(20,20),
+                new Cell(20,40),
+                new Cell(40,20),
+                new Cell(40,40)
+            });
+
+            listBox1.Items.Add(new KeyValuePair<Automata, String>(block, block.Name));
+            listBox1.Items.Add(new KeyValuePair<Automata,String>(blinker,blinker.Name));
+            listBox1.Items.Add(new KeyValuePair<Automata, String>(glider, glider.Name));
+            listBox1.Items.Add(new KeyValuePair<Automata, String>(beacon, beacon.Name));
         }
 
         void Form1_ResizeEnd(object sender, EventArgs e)
