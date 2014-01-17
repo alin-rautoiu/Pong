@@ -9,14 +9,14 @@ namespace Pong
     {
         public int X { get; set; }
         public int Y { get; set; }
-        public int Size { get; set; }
+        public static int Size { get; set; }
         public bool Drew { get; set; }
         public Cell(int X, int Y)
         {
             this.X = X;
             this.Y = Y;
             Drew = false;
-            Size = 40;
+            Size = 20;
         }
         public Cell():
             this(0,0)

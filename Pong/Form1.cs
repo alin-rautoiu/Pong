@@ -17,14 +17,20 @@ namespace Pong
         bool Paused;
         Timer tick;
         public List<Cell> cells = new List<Cell>();
+        int oldWidth;
+        int oldHeight;
         public Form1()
         {
+            oldHeight = this.Height;
+            oldWidth = this.Width;
+
+            ResizeEnd += Form1_ResizeEnd;
+
             InitializeComponent();
             Paused = true;
             panel1.Paint += Form1_Paint;
             button1.Click += button1_Click;
 
-            //MouseClick += Form1_MouseClick;
             panel1.Click += panel1_Click;
 
             //Toad
@@ -37,17 +43,27 @@ namespace Pong
             cells.Add(new Cell(80, 160));*/
 
             //Glider
-            cells.Add(new Cell(160, 160));
-            cells.Add(new Cell(200, 160));
-            cells.Add(new Cell(240, 160));
-            cells.Add(new Cell(240, 120));
-            cells.Add(new Cell(200, 80));
+            cells.Add(new Cell(80, 80));
+            cells.Add(new Cell(100, 80));
+            cells.Add(new Cell(120, 80));
+            cells.Add(new Cell(120, 60));
+            cells.Add(new Cell(100, 40));
+
+            foreach (var cell in cells)
+            {
+                cell.X += 20;
+                cell.Y += 20;
+            }
 
             tick = new Timer();
             tick.Tick += new EventHandler(logic);
-            tick.Interval = 250;
-            //tick.Enabled = true;            
+            tick.Interval = 250;    
             tick.Stop();
+        }
+
+        void Form1_ResizeEnd(object sender, EventArgs e)
+        {
+            
         }
 
         void panel1_Click(object sender, EventArgs e)
@@ -77,7 +93,7 @@ namespace Pong
         {
             if (Paused)
             {
-                Cell newCell = new Cell(MousePosition.X - (MousePosition.X - panel1.Left - this.Left - 10) % 40 - panel1.Left - this.Left - 10, MousePosition.Y - (MousePosition.Y - panel1.Top - this.Top - 30) % 40 - panel1.Top - this.Top - 30);
+                Cell newCell = new Cell(MousePosition.X - (MousePosition.X - panel1.Left - this.Left - 10) % Cell.Size - panel1.Left - this.Left - 10, MousePosition.Y - (MousePosition.Y - panel1.Top - this.Top - 30) % Cell.Size - panel1.Top - this.Top - 30);
 
                 if (cells.Contains(newCell))
                 {
@@ -100,14 +116,13 @@ namespace Pong
         private void Form1_Paint(object sender, PaintEventArgs e)
         {
             x += speed;
-            //var graphicsObj = this.CreateGraphics();
             var g = e.Graphics;
             Pen myPen = new Pen(System.Drawing.Color.Red, 4);
             foreach (var cell in cells)
             {
                 if (true)
                 {
-                    g.DrawRectangle(myPen, new Rectangle(cell.X, cell.Y, cell.Size, cell.Size));
+                    g.FillRectangle(new SolidBrush(Color.PaleVioletRed), new Rectangle(cell.X, cell.Y, Cell.Size, Cell.Size));
                     cell.Drew = true;
                 }
             }
